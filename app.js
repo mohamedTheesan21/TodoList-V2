@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 const app = express();
 
@@ -84,23 +85,23 @@ app.post("/delete", function (req, res) {
         res.redirect("/" + listName);
     })
   }
-
-  
-  
 });
+
+
 
 app.get("/:customListName", function (req, res) {
   const customListName = req.params.customListName;
+  const capCustomListName = _.capitalize(customListName);
 
   const list = new List({
-    name: customListName,
+    name: capCustomListName,
     items: defaultItems,
   });
 
-  List.findOne({ name: customListName }).then((foundList) => {
+  List.findOne({ name: capCustomListName }).then((foundList) => {
     if (foundList === null) {
       list.save();
-      res.redirect("/" + customListName);
+      res.redirect("/" + capCustomListName);
     } else {
       res.render("list", {
         listTitle: foundList.name,
