@@ -11,9 +11,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
-mongoose.connect("mongodb://localhost:27017/todolistDB", {
-  useNewUrlParser: true,
-});
+
+const DB_URL = "mongodb+srv://admin:12345@cluster0.yeame5w.mongodb.net/todolistDB";
+
+
+async function dbConnect() {
+  await mongoose
+    .connect(
+        DB_URL,
+      {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      }
+    )
+    .then(() => {
+      console.log("Successfully connected to MongoDB Atlas!");
+    })
+    .catch((error) => {
+      console.log("Unable to connect to MongoDB Atlas!");
+      console.error(error);
+    });
+}
+
+dbConnect();
 
 const itemsSchema = {
   name: { type: String, required: true, minlength: 1 },
