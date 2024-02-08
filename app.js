@@ -12,17 +12,13 @@ app.use(express.static("public"));
 app.set("view engine", "ejs");
 
 
-const DB_URL = "mongodb+srv://admin:12345@cluster0.yeame5w.mongodb.net/todolistDB";
+const DB_URL = "mongodb+srv://myAtlasDBUser:12345@myatlasclusteredu.zdyf7zp.mongodb.net/todoListDB";
 
 
 async function dbConnect() {
   await mongoose
     .connect(
-        DB_URL,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      }
+        DB_URL
     )
     .then(() => {
       console.log("Successfully connected to MongoDB Atlas!");
@@ -118,9 +114,9 @@ app.get("/:customListName", function (req, res) {
     items: defaultItems,
   });
 
-  List.findOne({ name: capCustomListName }).then((foundList) => {
+  List.findOne({ name: capCustomListName }).then(async(foundList) => {
     if (foundList === null) {
-      list.save();
+      await list.save();
       res.redirect("/" + capCustomListName);
     } else {
       res.render("list", {
@@ -130,6 +126,8 @@ app.get("/:customListName", function (req, res) {
     }
   });
 });
+
+
 
 app.listen(3000, function () {
   console.log("Server is running on port 3000.");
